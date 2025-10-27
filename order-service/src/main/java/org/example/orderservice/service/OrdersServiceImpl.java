@@ -2,6 +2,7 @@ package org.example.orderservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.orderservice.configuration.ProductClient;
 import org.example.orderservice.model.Orders;
 import org.example.orderservice.model.dto.CreateOrderRequest;
 import org.example.orderservice.model.dto.ProductView;
@@ -15,12 +16,15 @@ import org.springframework.web.client.RestTemplate;
 public class OrdersServiceImpl implements OrdersService {
 
     private final RestTemplate restTemplate;
+    private final ProductClient productClient;
     private final OrdersJpaRepository repository;
 
     @Override
     public Orders createOrder(CreateOrderRequest request) {
-        ProductView productView = restTemplate.getForObject("http://products-service/products/" + request.productCode(),
-                ProductView.class);
+//        ProductView productView = restTemplate.getForObject("http://products-service/products/" + request.productCode(),
+//                ProductView.class);
+
+        ProductView productView = productClient.getProductByCode(request.productCode());
 
         log.info("productView = {}", productView);
 
